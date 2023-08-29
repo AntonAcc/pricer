@@ -9,7 +9,7 @@ class PriceGetTest extends WebTestCase
     public function testGetMethod(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/price/get');
+        $client->request('GET', '/price/get');
 
         $this->assertResponseStatusCodeSame(400);
 
@@ -21,7 +21,7 @@ class PriceGetTest extends WebTestCase
     public function testRequestIsEmpty(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('POST', '/price/get');
+        $client->request('POST', '/price/get');
 
         $this->assertResponseStatusCodeSame(400);
 
@@ -33,7 +33,7 @@ class PriceGetTest extends WebTestCase
     public function testRequestInvalidJson(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('POST', '/price/get', [], [], [], '{\}');
+        $client->request('POST', '/price/get', [], [], [], '{\}');
 
         $this->assertResponseStatusCodeSame(400);
 
@@ -42,8 +42,63 @@ class PriceGetTest extends WebTestCase
         $this->assertJsonStringEqualsJsonString('{"message":"json_error","errors":["Could not decode request body."]}', $responseContent);
     }
 
+    public function testRequestProductIsEmpty(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/price/get', [], [], [], '{
+            "taxNumber": "DE123456789",
+            "couponCode": "D15",
+            "paymentProcessor": "paypal"
+        }');
+        $this->assertResponseStatusCodeSame(400);
+    }
 
-//    public function testSomething(): void
+    public function testRequestTaxNumberIsEmpty(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/price/get', [], [], [], '{
+            "product": "1",
+            "couponCode": "D15",
+            "paymentProcessor": "paypal"
+        }');
+        $this->assertResponseStatusCodeSame(400);
+    }
+
+    public function testRequestCouponCodeIsEmpty(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/price/get', [], [], [], '{
+            "product": "1",
+            "taxNumber": "DE123456789",
+            "paymentProcessor": "paypal"
+        }');
+        $this->assertResponseStatusCodeSame(400);
+    }
+
+    public function testRequestPaymentProcessorIsEmpty(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/price/get', [], [], [], '{
+            "product": "1",
+            "taxNumber": "DE123456789",
+            "couponCode": "D15"
+        }');
+        $this->assertResponseStatusCodeSame(400);
+    }
+
+//    public function testRequestPaymentProcessorIsEmpty(): void
+//    {
+//        $client = static::createClient();
+//        $client->request('POST', '/price/get', [], [], [], '{
+//            "product": "1",
+//            "taxNumber": "DE123456789",
+//            "couponCode": "D15",
+//            "paymentProcessor": "paypal"
+//        }');
+//        $this->assertResponseStatusCodeSame(400);
+//    }
+
+    //    public function testSomething(): void
 //    {
 //        $client = static::createClient();
 //        $crawler = $client->request('GET', '/price/get');
