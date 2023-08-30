@@ -14,7 +14,8 @@ class PriceService
 {
     public function __construct(
         readonly private TaxService $taxService,
-        readonly private ProductService $productService
+        readonly private ProductService $productService,
+        readonly private CouponService $couponService
     ) {}
 
     public function getPrice(PriceRequest $priceRequest): Price
@@ -23,7 +24,8 @@ class PriceService
         $product = $this->productService->getProductById($priceRequest->product);
 
         $priceCalculator = (new PriceCalculator($product))
-            ->withTax($this->taxService->getTaxByTaxNumber($priceRequest->taxNumber));
+            ->withTax($this->taxService->getTaxByTaxNumber($priceRequest->taxNumber))
+            ->withCoupon($this->couponService->getCouponById($priceRequest->couponCode));
 
         return $priceCalculator->calculate();
     }
