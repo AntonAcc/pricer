@@ -13,6 +13,7 @@ use App\ValueObject\Price;
 class PriceService
 {
     public function __construct(
+        readonly private TaxService $taxService,
         readonly private ProductService $productService
     ) {}
 
@@ -21,7 +22,8 @@ class PriceService
         // TODO Check product with hasProductWithId
         $product = $this->productService->getProductById($priceRequest->product);
 
-        $priceCalculator = new PriceCalculator($product);
+        $priceCalculator = (new PriceCalculator($product))
+            ->withTax($this->taxService->getTaxByTaxNumber($priceRequest->taxNumber));
 
         return $priceCalculator->calculate();
     }

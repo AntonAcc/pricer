@@ -36,4 +36,20 @@ class Product
     {
         return $this->price;
     }
+
+    /**
+     * @return float
+     */
+    public function getPriceValue(): float
+    {
+        return $this->price->getValue();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPriceCurrency(): string
+    {
+        return $this->price->getCurrency();
+    }
 }
