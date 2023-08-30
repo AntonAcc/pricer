@@ -9,6 +9,8 @@ namespace App\Entity;
 use App\Entity\Coupon\TypeInterface;
 use App\Entity\Coupon\TypeRate;
 use App\Entity\Coupon\TypeSum;
+use DomainException;
+use UnhandledMatchError;
 
 class Coupon
 {
@@ -26,10 +28,14 @@ class Coupon
     {
         $this->discount = $discount;
 
-        $this->couponType = match ($couponTypeId) {
-            self::TYPE_SUM => new TypeSum(),
-            self::TYPE_RATE => new TypeRate(),
-        };
+        try {
+            $this->couponType = match ($couponTypeId) {
+                self::TYPE_SUM => new TypeSum(),
+                self::TYPE_RATE => new TypeRate(),
+            };
+        } catch (UnhandledMatchError $e) {
+            throw new DomainException(sprintf('Unknown coupon type id %s', $couponTypeId));
+        }
     }
 
 
