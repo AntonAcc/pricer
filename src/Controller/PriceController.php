@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Exception\MethodException;
+use App\Exception\TaxNumberException;
 use App\Request\PriceRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
@@ -31,7 +32,7 @@ class PriceController extends AbstractController
             $errors = $this->validator->validate($priceRequest);
 
             if ($errors->count() > 0) {
-                $messages = ['message' => 'request_validation_failed', 'errors' => []];
+                $messages = ['message' => 'request_data_error', 'errors' => []];
 
                 /** @var ConstraintViolation $errors */
                 foreach ($errors as $message) {

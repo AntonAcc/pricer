@@ -86,30 +86,15 @@ class PriceGetTest extends WebTestCase
         $this->assertResponseStatusCodeSame(400);
     }
 
-//    public function testRequestPaymentProcessorIsEmpty(): void
-//    {
-//        $client = static::createClient();
-//        $client->request('POST', '/price/get', [], [], [], '{
-//            "product": "1",
-//            "taxNumber": "DE123456789",
-//            "couponCode": "D15",
-//            "paymentProcessor": "paypal"
-//        }');
-//        $this->assertResponseStatusCodeSame(400);
-//    }
-
-    //    public function testSomething(): void
-//    {
-//        $client = static::createClient();
-//        $crawler = $client->request('GET', '/price/get');
-//
-////        $this->assertResponseIsSuccessful();
-//        $this->assertResponseStatusCodeSame(200);
-////        $this->assertSelectorTextContains('h1', 'Hello World');
-//
-//        $response = $client->getResponse();
-//        $data = $response->getContent();
-//        //dump($data);
-//        $this->assertStringContainsString("OK", $data);
-//    }
+    public function testCorrectRequest(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/price/get', [], [], [], '{
+            "product": "1",
+            "taxNumber": "DE123456789",
+            "couponCode": "D15",
+            "paymentProcessor": "paypal"
+        }');
+        $this->assertResponseStatusCodeSame(200);
+    }
 }

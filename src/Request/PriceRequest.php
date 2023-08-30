@@ -7,18 +7,24 @@ declare(strict_types=1);
 namespace App\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as AppAssert;
 
 class PriceRequest extends BaseRequest
 {
     #[Assert\NotBlank]
-    protected int $product;
+    #[Assert\Type('string')]
+    public $product;
 
     #[Assert\NotBlank]
-    protected string $taxNumber;
+    #[Assert\Type('string')]
+    #[AppAssert\TaxNumber]
+    public $taxNumber;
 
     #[Assert\NotBlank]
-    protected string $couponCode;
+    #[Assert\Type('string')]
+    public $couponCode;
 
     #[Assert\NotBlank]
-    protected string $paymentProcessor;
+    #[Assert\Type('string')]
+    public $paymentProcessor;
 }
