@@ -12,4 +12,11 @@ interface TaxInterface
      * @return float
      */
     public function getTaxRate(): float;
+
+    /**
+     * @param float $priceValue
+     *
+     * @return float
+     */
+    public function apply(float $priceValue): float;
 }
