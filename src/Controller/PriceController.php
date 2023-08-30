@@ -9,6 +9,7 @@ namespace App\Controller;
 use App\Exception\MethodException;
 use App\Exception\TaxNumberException;
 use App\Request\PriceRequest;
+use App\Service\PriceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +21,10 @@ use Throwable;
 
 class PriceController extends AbstractController
 {
-    public function __construct(private readonly ValidatorInterface $validator)
-    {
-    }
+    public function __construct(
+        private readonly ValidatorInterface $validator,
+        private readonly PriceService $priceService
+    ) {}
 
     #[Route('/price/get', name: 'price_get')]
     public function get(Request $request): Response
@@ -45,6 +47,13 @@ class PriceController extends AbstractController
 
                 return $this->json($messages, 400);
             }
+
+            $price = $this->priceService->getPrice($priceRequest);
+
+            return $this->json(['price' =>  [
+                'value' => $price->getValue(),
+                'currency' => $price->getCurrency(),
+            ]]);
         } catch (JsonException $e) {
             $messages = ['message' => 'json_error', 'errors' => [$e->getMessage()]];
 
@@ -53,12 +62,14 @@ class PriceController extends AbstractController
             $messages = ['message' => 'method_error', 'errors' => [$e->getMessage()]];
 
             return $this->json($messages, 400);
+        } catch (TaxNumberException $e) {
+            $messages = ['message' => 'tax_number_error', 'errors' => [$e->getMessage()]];
+
+            return $this->json($messages, 400);
         } catch (Throwable $e) {
             $messages = ['message' => 'unknown_error', 'errors' => [$e->getMessage()]];
 
             return $this->json($messages, 400);
         }
-
-        return new Response();
     }
 }
