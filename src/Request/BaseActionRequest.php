@@ -9,7 +9,7 @@ namespace App\Request;
 use App\Exception\MethodException;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class BaseRequest
+abstract class BaseActionRequest
 {
     public function __construct(protected Request $request)
     {

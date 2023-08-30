@@ -6,70 +6,47 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Exception\MethodException;
-use App\Exception\TaxNumberException;
-use App\Request\PriceRequest;
+use App\Request\BaseActionRequest;
+use App\Request\GetPriceRequest;
 use App\Service\PriceService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Throwable;
 
-class PriceController extends AbstractController
+class PriceController extends BaseController
 {
     public function __construct(
-        private readonly ValidatorInterface $validator,
+        ValidatorInterface $validator,
         private readonly PriceService $priceService
-    ) {}
+    ) {
+        parent::__construct($validator);
+    }
 
     #[Route('/price/get', name: 'price_get')]
     public function get(Request $request): Response
     {
-        try {
-            $priceRequest = new PriceRequest($request);
-            $errors = $this->validator->validate($priceRequest);
+        return $this->processRequest($request);
+    }
 
-            if ($errors->count() > 0) {
-                $messages = ['message' => 'request_data_error', 'errors' => []];
+    /**
+     * {@inheritDoc}
+     */
+    protected function convertRequest(Request $request): BaseActionRequest
+    {
+        return new GetPriceRequest($request);
+    }
 
-                /** @var ConstraintViolation $errors */
-                foreach ($errors as $message) {
-                    $messages['errors'][] = [
-                        'property' => $message->getPropertyPath(),
-                        'value' => $message->getInvalidValue(),
-                        'message' => $message->getMessage(),
-                    ];
-                }
+    /**
+     * {@inheritDoc}
+     */
+    protected function processActionRequest(BaseActionRequest|GetPriceRequest $actionRequest): Response
+    {
+        $price = $this->priceService->getPrice($actionRequest);
 
-                return $this->json($messages, 400);
-            }
-
-            $price = $this->priceService->getPrice($priceRequest);
-
-            return $this->json(['price' =>  [
-                'value' => $price->getValue(),
-                'currency' => $price->getCurrency(),
-            ]]);
-        } catch (JsonException $e) {
-            $messages = ['message' => 'json_error', 'errors' => [$e->getMessage()]];
-
-            return $this->json($messages, 400);
-        } catch (MethodException $e) {
-            $messages = ['message' => 'method_error', 'errors' => [$e->getMessage()]];
-
-            return $this->json($messages, 400);
-        } catch (TaxNumberException $e) {
-            $messages = ['message' => 'tax_number_error', 'errors' => [$e->getMessage()]];
-
-            return $this->json($messages, 400);
-        } catch (Throwable $e) {
-            $messages = ['message' => 'unknown_error', 'errors' => [$e->getMessage()]];
-
-            return $this->json($messages, 400);
-        }
+        return $this->json(['price' =>  [
+            'value' => $price->getValue(),
+            'currency' => $price->getCurrency(),
+        ]]);
     }
 }

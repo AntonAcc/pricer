@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Request\PriceRequest;
+use App\Request\GetPriceRequest;
 use App\Service\PriceService\PriceCalculator;
 use App\ValueObject\Price;
 
@@ -18,14 +18,14 @@ class PriceService
         readonly private CouponService $couponService
     ) {}
 
-    public function getPrice(PriceRequest $priceRequest): Price
+    public function getPrice(GetPriceRequest $getPriceRequest): Price
     {
         // TODO Check product with hasProductWithId
-        $product = $this->productService->getProductById($priceRequest->product);
+        $product = $this->productService->getProductById($getPriceRequest->product);
 
         $priceCalculator = (new PriceCalculator($product))
-            ->withTax($this->taxService->getTaxByTaxNumber($priceRequest->taxNumber))
-            ->withCoupon($this->couponService->getCouponById($priceRequest->couponCode));
+            ->withTax($this->taxService->getTaxByTaxNumber($getPriceRequest->taxNumber))
+            ->withCoupon($this->couponService->getCouponById($getPriceRequest->couponCode));
 
         return $priceCalculator->calculate();
     }

@@ -9,7 +9,7 @@ namespace App\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator as AppAssert;
 
-class PriceRequest extends BaseRequest
+class GetPriceRequest extends BaseActionRequest
 {
     #[Assert\NotBlank]
     #[Assert\Type('string')]
