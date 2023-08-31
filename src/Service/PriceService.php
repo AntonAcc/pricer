@@ -24,8 +24,11 @@ class PriceService
         $product = $this->productService->getProductById($getPriceRequest->product);
 
         $priceCalculator = (new PriceCalculator($product))
-            ->withTax($this->taxService->getTaxByTaxNumber($getPriceRequest->taxNumber))
-            ->withCoupon($this->couponService->getCouponById($getPriceRequest->couponCode));
+            ->withTax($this->taxService->getTaxByTaxNumber($getPriceRequest->taxNumber));
+
+        if ($getPriceRequest->couponCode) {
+            $priceCalculator->withCoupon($this->couponService->getCouponById($getPriceRequest->couponCode));
+        }
 
         return $priceCalculator->calculate();
     }

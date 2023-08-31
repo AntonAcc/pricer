@@ -64,7 +64,7 @@ class PriceGetTest extends WebTestCase
         $this->assertResponseStatusCodeSame(400);
     }
 
-    public function testRequestCouponCodeIsEmpty(): void
+    public function testRequestCouponCodeIsNotRequired(): void
     {
         $client = static::createClient();
         $client->request('POST', '/price/get', [], [], [], '{
@@ -72,7 +72,7 @@ class PriceGetTest extends WebTestCase
             "taxNumber": "DE123456789",
             "paymentProcessor": "paypal"
         }');
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(200);
     }
 
     public function testRequestPaymentProcessorIsEmpty(): void
