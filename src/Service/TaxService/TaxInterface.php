@@ -9,11 +9,6 @@ namespace App\Service\TaxService;
 interface TaxInterface
 {
     /**
-     * @return float
-     */
-    public function getTaxRate(): float;
-
-    /**
      * @param float $priceValue
      *
      * @return float

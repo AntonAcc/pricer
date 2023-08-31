@@ -13,13 +13,8 @@ class TaxPlainRate implements TaxInterface
         readonly private float $taxRate
     ) {}
 
-    public function getTaxRate(): float
-    {
-        return $this->taxRate;
-    }
-
     public function apply(float $priceValue): float
     {
-        return $priceValue * (1 + $this->taxRate / 100);
+        return round($priceValue * (1 + $this->taxRate / 100), 10);
     }
 }

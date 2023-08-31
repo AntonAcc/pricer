@@ -9,7 +9,7 @@ namespace App\Tests\Service\PriceService;
 use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Service\PriceService\PriceCalculator;
-use App\Service\TaxService\TaxInterface;
+use App\Service\TaxService\TaxPlainRate;
 use App\ValueObject\Price;
 use PHPUnit\Framework\TestCase;
 
@@ -29,9 +29,7 @@ class PriceCalculatorTest extends TestCase
     {
         $product = new Product('Iphone', new Price(100, 'EUR'));
         $priceCalculator = new PriceCalculator($product);
-        $taxMock = $this->createMock(TaxInterface::class);
-        $taxMock->method('getTaxRate')->willReturn(15.0);
-        $priceCalculator->withTax($taxMock);
+        $priceCalculator->withTax(new TaxPlainRate(15.0));
         $price = $priceCalculator->calculate();
 
         $this->assertEquals(115.0, $price->getValue());
@@ -42,7 +40,6 @@ class PriceCalculatorTest extends TestCase
     {
         $product = new Product('Iphone', new Price(100, 'EUR'));
         $priceCalculator = new PriceCalculator($product);
-
         $priceCalculator->withCoupon(new Coupon(25, Coupon::TYPE_SUM));
 
         $price = $priceCalculator->calculate();
@@ -55,11 +52,7 @@ class PriceCalculatorTest extends TestCase
     {
         $product = new Product('Iphone', new Price(100, 'EUR'));
         $priceCalculator = new PriceCalculator($product);
-
-        $taxMock = $this->createMock(TaxInterface::class);
-        $taxMock->method('getTaxRate')->willReturn(24.0);
-        $priceCalculator->withTax($taxMock);
-
+        $priceCalculator->withTax(new TaxPlainRate(24.0));
         $priceCalculator->withCoupon(new Coupon(6, Coupon::TYPE_RATE));
 
         $price = $priceCalculator->calculate();

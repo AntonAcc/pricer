@@ -33,7 +33,7 @@ class PriceCalculator
             $result = $this->coupon->apply($result);
         }
         if ($this->tax !== null) {
-            $result *= (1 + $this->tax->getTaxRate() / 100);
+            $result = $this->tax->apply($result);
         }
 
         $result = round($result, 10);
