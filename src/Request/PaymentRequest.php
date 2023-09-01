@@ -17,7 +17,7 @@ class PaymentRequest extends BaseActionRequest
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[AppAssert\PaymentProcessor]
-    public string $paymentProcessor;
+    public $paymentProcessor;
 
     protected function populate(): void
     {

@@ -13,16 +13,16 @@ class GetPriceRequest extends BaseActionRequest
 {
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    public string $product;
+    public $product;
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[AppAssert\TaxNumber]
-    public string $taxNumber;
+    public $taxNumber;
 
     #[Assert\NotBlank(
         allowNull: true
     )]
     #[Assert\Type('string')]
-    public ?string $couponCode = null;
+    public $couponCode = null;
 }
