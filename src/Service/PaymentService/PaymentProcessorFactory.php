@@ -21,6 +21,21 @@ class PaymentProcessorFactory
     /**
      * @param string $id
      *
+     * @return bool
+     */
+    public static function isAvailableId(string $id): bool
+    {
+        $availableIdList = [
+            self::PAYMENT_PROCESSOR_PAYPAL,
+            self::PAYMENT_PROCESSOR_STRIPE,
+        ];
+
+        return in_array($id, $availableIdList);
+    }
+
+    /**
+     * @param string $id
+     *
      * @return PaymentProcessorInterface
      */
     public static function byId(string $id): PaymentProcessorInterface

@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as AppAssert;
 
 #[Assert\Cascade]
 class PaymentRequest extends BaseActionRequest
@@ -15,6 +16,7 @@ class PaymentRequest extends BaseActionRequest
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
+    #[AppAssert\PaymentProcessor]
     public string $paymentProcessor;
 
     protected function populate(): void
