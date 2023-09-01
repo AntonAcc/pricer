@@ -1,3 +1,5 @@
+# Test Assignment - symfony REST app 
+
 ## Assignment specifications:
 
 https://github.com/AntonAcc/pricer/blob/master/specifications.md
