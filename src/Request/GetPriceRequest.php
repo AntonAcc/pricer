@@ -25,8 +25,4 @@ class GetPriceRequest extends BaseActionRequest
     )]
     #[Assert\Type('string')]
     public ?string $couponCode = null;
-
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
-    public string $paymentProcessor;
 }

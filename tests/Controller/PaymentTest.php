@@ -4,12 +4,12 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PriceGetTest extends WebTestCase
+class PaymentTest extends WebTestCase
 {
     public function testGetMethod(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/price/get');
+        $client->request('GET', '/payment/process');
 
         $this->assertResponseStatusCodeSame(400);
 
@@ -21,7 +21,7 @@ class PriceGetTest extends WebTestCase
     public function testRequestIsEmpty(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/price/get');
+        $client->request('POST', '/payment/process');
 
         $this->assertResponseStatusCodeSame(400);
 
@@ -33,7 +33,7 @@ class PriceGetTest extends WebTestCase
     public function testRequestInvalidJson(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/price/get', [], [], [], '{\}');
+        $client->request('POST', '/payment/process', [], [], [], '{\}');
 
         $this->assertResponseStatusCodeSame(400);
 
@@ -45,7 +45,7 @@ class PriceGetTest extends WebTestCase
     public function testRequestProductIsEmpty(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/price/get', [], [], [], '{
+        $client->request('POST', '/payment/process', [], [], [], '{
             "taxNumber": "DE123456789",
             "couponCode": "D15",
             "paymentProcessor": "paypal"
@@ -56,9 +56,10 @@ class PriceGetTest extends WebTestCase
     public function testRequestTaxNumberIsEmpty(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/price/get', [], [], [], '{
+        $client->request('POST', '/payment/process', [], [], [], '{
             "product": "1",
-            "couponCode": "D15"
+            "couponCode": "D15",
+            "paymentProcessor": "paypal"
         }');
         $this->assertResponseStatusCodeSame(400);
     }
@@ -66,21 +67,46 @@ class PriceGetTest extends WebTestCase
     public function testRequestCouponCodeIsNotRequired(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/price/get', [], [], [], '{
+        $client->request('POST', '/payment/process', [], [], [], '{
             "product": "1",
-            "taxNumber": "DE123456789"
+            "taxNumber": "DE123456789",
+            "paymentProcessor": "paypal"
         }');
         $this->assertResponseStatusCodeSame(200);
+    }
+
+    public function testRequestPaymentProcessorIsEmpty(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/payment/process', [], [], [], '{
+            "product": "1",
+            "taxNumber": "DE123456789",
+            "couponCode": "D15"
+        }');
+        $this->assertResponseStatusCodeSame(400);
     }
 
     public function testCorrectRequest(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/price/get', [], [], [], '{
+        $client->request('POST', '/payment/process', [], [], [], '{
             "product": "1",
             "taxNumber": "DE123456789",
-            "couponCode": "D15"
+            "couponCode": "D15",
+            "paymentProcessor": "paypal"
         }');
         $this->assertResponseStatusCodeSame(200);
+    }
+
+    public function testUnknownPaymentProcessor(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/payment/process', [], [], [], '{
+            "product": "1",
+            "taxNumber": "DE123456789",
+            "couponCode": "D15",
+            "paymentProcessor": "pay_some_service"
+        }');
+        $this->assertResponseStatusCodeSame(400);
     }
 }
