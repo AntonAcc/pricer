@@ -33,7 +33,7 @@ class PaymentProcessorValidator extends ConstraintValidator
         }
 
         if (!PaymentProcessorFactory::isAvailableId($value)) {
-            $this->context->buildViolation(sprintf("Unknown payment processor id '%s'", $value))->addViolation();
+            $this->context->buildViolation(sprintf("Unknown payment processor id %s", $value))->addViolation();
         }
     }
 
