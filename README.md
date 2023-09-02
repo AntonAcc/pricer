@@ -6,30 +6,30 @@ https://github.com/AntonAcc/pricer/blob/master/specifications.md
 
 ## Used patterns and principles:
 
-Simple Factory:
+**Simple Factory:**
 - https://github.com/AntonAcc/pricer/blob/master/src/Service/PaymentService/PaymentProcessorFactory.php
 - https://github.com/AntonAcc/pricer/blob/master/src/Service/TaxService/TaxFactory.php
 
-Factory Method:
+**Factory Method:**
 - https://github.com/AntonAcc/pricer/blob/master/src/Controller/BaseController.php#L31
 
-Adapter:
+**Adapter:**
 - https://github.com/AntonAcc/pricer/blob/master/src/Service/PaymentService/PaymentProcessor/Paypal.php
 - https://github.com/AntonAcc/pricer/blob/master/src/Service/PaymentService/PaymentProcessor/Stripe.php
 
-Strategy:
+**Strategy:**
 - https://github.com/AntonAcc/pricer/blob/master/src/Entity/Coupon.php#L32
 
-Template method:
+**Template method:**
 - https://github.com/AntonAcc/pricer/blob/master/src/Controller/BaseController.php#L45
 
-SOLID - Open-Closed Principle:
+**SOLID - Open-Closed Principle:**
 - https://github.com/AntonAcc/pricer/blob/master/src/Repository/CouponRepositoryInterface.php
 - https://github.com/AntonAcc/pricer/blob/master/src/Repository/ProductRepositoryInterface.php
 - https://github.com/AntonAcc/pricer/blob/master/src/Service/PaymentService/PaymentProcessorInterface.php
 - https://github.com/AntonAcc/pricer/blob/master/src/Service/TaxService/TaxInterface.php
 
-Value Object:
+**Value Object:**
 - https://github.com/AntonAcc/pricer/blob/master/src/ValueObject/Price.php
 
 ## Testing:
