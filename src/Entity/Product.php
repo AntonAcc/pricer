@@ -12,14 +12,21 @@ class Product
 {
     readonly private string $id;
 
+    readonly private float $priceValue;
+
+    readonly private string $priceCurrency;
+
     /**
      * @param string $name
      * @param Price $price
      */
     public function __construct(
         readonly private string $name,
-        readonly private Price $price,
-    ) {}
+        private Price $price,
+    ) {
+        $this->priceValue = $price->getValue();
+        $this->priceCurrency = $price->getCurrency();
+    }
 
     /**
      * @return string
@@ -34,6 +41,13 @@ class Product
      */
     public function getPrice(): Price
     {
+        if (!isset($this->price)) {
+            $this->price = new Price(
+                $this->priceValue,
+                $this->priceCurrency
+            );
+        }
+
         return $this->price;
     }
 
